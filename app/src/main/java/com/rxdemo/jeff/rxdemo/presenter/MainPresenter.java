@@ -2,9 +2,9 @@ package com.rxdemo.jeff.rxdemo.presenter;
 
 import android.content.Context;
 
-import com.rxdemo.jeff.rxdemo.MainActivity;
+import com.rxdemo.jeff.rxdemo.view.MainActivity;
 import com.rxdemo.jeff.rxdemo.base.BasePresenter;
-import com.rxdemo.jeff.rxdemo.view.MainContract;
+import com.rxdemo.jeff.rxdemo.contract.MainContract;
 
 /**
  * Created by jeff on 17-5-2.
