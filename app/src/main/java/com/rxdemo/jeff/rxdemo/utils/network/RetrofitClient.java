@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
 import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 import okhttp3.Cache;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
@@ -31,7 +32,7 @@ import retrofit2.converter.fastjson.FastJsonConverterFactory;
 public class RetrofitClient {
 
     private final String BASE_URL = "http://test.mblsoft.com/";
-    private ApiService api;
+    public ApiService ApiService;
     private static RetrofitClient client;
 
     //获取单例
@@ -70,7 +71,7 @@ public class RetrofitClient {
                 .build();
 
         // 创建API接口类
-        api = retrofit.create(ApiService.class);
+        ApiService = retrofit.create(ApiService.class);
     }
 
 
@@ -92,11 +93,5 @@ public class RetrofitClient {
         builder.networkInterceptors().add(new StethoInterceptor());
     }
 
-
-    public void login(int flag, String name, String urlcode, Observer<JSONObject> observer) {
-        api.login(flag, name, urlcode)
-                .compose(RxUtils.<JSONObject>io_main())
-                .subscribe(observer);
-    }
 
 }
