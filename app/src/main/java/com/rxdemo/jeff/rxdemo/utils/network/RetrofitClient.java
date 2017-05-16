@@ -1,31 +1,49 @@
-package com.rxdemo.jeff.rxdemo.network;
+package com.rxdemo.jeff.rxdemo.utils.network;
 
+import com.alibaba.fastjson.JSONObject;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.rxdemo.jeff.rxdemo.App;
+import com.rxdemo.jeff.rxdemo.utils.RxUtils;
+
+import org.reactivestreams.Subscriber;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observer;
+import io.reactivex.functions.Consumer;
 import okhttp3.Cache;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.fastjson.FastJsonConverterFactory;
 
 /**
  * Created by jeff on 17-5-15.
  */
 
-public class NetworkUtil {
+public class RetrofitClient {
 
-    private final String BASE_URL = "http://test.mblsoft.com";
+    private final String BASE_URL = "http://test.mblsoft.com/";
+    private ApiService api;
+    private static RetrofitClient client;
 
-    /// RxRetrofitClient.java
-    private void initClient() {
+    //获取单例
+    public static RetrofitClient getInstance() {
+        if (client == null) {
+            client = new RetrofitClient();
+        }
+        return client;
+    }
+
+    //初始化
+    private RetrofitClient() {
 
         // 创建OkHttpClient
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
@@ -44,17 +62,17 @@ public class NetworkUtil {
         addInterceptor(builder);
 
         // 创建Retrofit实例
-        Retrofit doubanRetrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .client(builder.build())
-                .addConverterFactory(GsonConverterFactory.create())
-                // .addConverterFactory(FastJsonConvertFactory.create())
+                .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(BASE_URL)
                 .build();
 
         // 创建API接口类
-        doubanApi = doubanRetrofit.create(IDoubanApi.class);
+        api = retrofit.create(ApiService.class);
     }
+
 
     private void addInterceptor(OkHttpClient.Builder builder) {
         // 添加Header
@@ -62,7 +80,7 @@ public class NetworkUtil {
 
         // 添加缓存控制策略
         File cacheDir = App.getInstance().getExternalCacheDir();
-        Cache cache = new Cache(cacheDir, DEFAULT_CACHE_SIZE);
+        Cache cache = new Cache(cacheDir, 1024 * 1024 * 50);
         builder.cache(cache).addInterceptor(new HttpCacheInterceptor());
 
         // 添加http log
@@ -72,6 +90,13 @@ public class NetworkUtil {
 
         // 添加调试工具
         builder.networkInterceptors().add(new StethoInterceptor());
+    }
+
+
+    public void login(int flag, String name, String urlcode, Observer<JSONObject> observer) {
+        api.login(flag, name, urlcode)
+                .compose(RxUtils.<JSONObject>io_main())
+                .subscribe(observer);
     }
 
 }
