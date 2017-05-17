@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">RxDemo</string>
+
+    <!--上传照片-->
+    <string name="upload_photo_api">/api/account/UploadImages</string>
+
+    <!--上传账户信息-->
+    <string name="upload_userinfo_api">/api/account/EditUser</string>
 </resources>

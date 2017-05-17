@@ -25,7 +25,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewResid)
-        setStatusBar()
+//        setStatusBar()
         init()
         loadDatas()
     }
@@ -40,13 +40,13 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onResume()
     }
 
-    protected fun setStatusBar() {
+  /*  protected fun setStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             StatusBarUtil.setColor(this, resources.getColor(R.color.colorAccent, theme), 0)
         } else {
             StatusBarUtil.setColor(this, resources.getColor(R.color.colorAccent), 0)
         }
-    }
+    }*/
 
     protected fun loadDatas() {
 

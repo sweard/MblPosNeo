@@ -1,22 +1,16 @@
 package com.rxdemo.jeff.rxdemo.utils.network;
 
-import com.alibaba.fastjson.JSONObject;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.rxdemo.jeff.rxdemo.App;
-import com.rxdemo.jeff.rxdemo.utils.RxUtils;
 
-import org.reactivestreams.Subscriber;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observer;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observers.DisposableObserver;
 import okhttp3.Cache;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
@@ -31,8 +25,10 @@ import retrofit2.converter.fastjson.FastJsonConverterFactory;
 
 public class RetrofitClient {
 
-    private final String BASE_URL = "http://test.mblsoft.com/";
     public ApiService ApiService;
+    private final String LOCAL_URL = "http://192.168.2.233/";
+    private final String BASE_URL = "http://test.mblsoft.com/";
+
     private static RetrofitClient client;
 
     //获取单例
@@ -67,7 +63,7 @@ public class RetrofitClient {
                 .client(builder.build())
                 .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(BASE_URL)
+                .baseUrl(LOCAL_URL)
                 .build();
 
         // 创建API接口类
