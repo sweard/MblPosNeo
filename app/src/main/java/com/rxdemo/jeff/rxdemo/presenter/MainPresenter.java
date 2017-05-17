@@ -1,26 +1,23 @@
 package com.rxdemo.jeff.rxdemo.presenter;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
-import com.rxdemo.jeff.rxdemo.utils.LogUtils;
-import com.rxdemo.jeff.rxdemo.utils.RxUtils;
-import com.rxdemo.jeff.rxdemo.utils.network.RetrofitClient;
 import com.rxdemo.jeff.rxdemo.base.BasePresenter;
 import com.rxdemo.jeff.rxdemo.contract.MainContract;
+import com.rxdemo.jeff.rxdemo.utils.LogUtils;
+import com.rxdemo.jeff.rxdemo.utils.RxUtils;
+import com.rxdemo.jeff.rxdemo.utils.network.ApiService;
+import com.rxdemo.jeff.rxdemo.utils.network.RetrofitClient;
 import com.rxdemo.jeff.rxdemo.view.MainActivity;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 
 /**
@@ -31,6 +28,7 @@ public class MainPresenter extends BasePresenter<MainActivity> implements MainCo
 
     private final String TAG = getClass().getSimpleName();
     private final String path = "/sdcard/迈宝乐固定收款二维码/", fileName = "1488008738104.jpg";
+    private final ApiService apiService = RetrofitClient.getInstance().ApiService;
 
     public MainPresenter(Object object) {
         super(object);
@@ -67,9 +65,7 @@ public class MainPresenter extends BasePresenter<MainActivity> implements MainCo
         if (file.exists()) {
             RequestBody requestFile = RequestBody.create(MediaType.parse(""), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            RetrofitClient.getInstance()
-                    .ApiService
-                    .uploadFile(body)
+            apiService.uploadFile(body)
                     .compose(RxUtils.<JSONObject>io_main())
                     .subscribeWith(new DisposableObserver<JSONObject>() {
                         @Override
@@ -96,8 +92,7 @@ public class MainPresenter extends BasePresenter<MainActivity> implements MainCo
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("aaa", "bbb");
         RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), jsonObject.toJSONString());
-        RetrofitClient.getInstance().ApiService
-                .uploadStr(body)
+        apiService.uploadStr(body)
                 .compose(RxUtils.<JSONObject>io_main())
                 .subscribeWith(new DisposableObserver<JSONObject>() {
                     @Override
@@ -121,8 +116,7 @@ public class MainPresenter extends BasePresenter<MainActivity> implements MainCo
         Map<String, String> fields = new HashMap<>();
         fields.put("aaa", "bbb");
         fields.put("bbb", "ccc");
-        RetrofitClient.getInstance()
-                .ApiService
+        apiService
                 .uploadStrs(fields)
                 .compose(RxUtils.<JSONObject>io_main())
                 .subscribeWith(new DisposableObserver<JSONObject>() {
