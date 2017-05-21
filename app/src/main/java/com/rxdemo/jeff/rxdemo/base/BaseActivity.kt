@@ -1,21 +1,16 @@
 package com.rxdemo.jeff.rxdemo.base
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-
-import com.jaeger.library.StatusBarUtil
-import com.rxdemo.jeff.rxdemo.R
 
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -26,6 +21,25 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewResid)
 //        setStatusBar()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+
+            /*getWindow().decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE and View.SYSTEM_UI_FLAG_FULLSCREEN
+
+            val window = window
+            window.statusBarColor = ContextCompat.getColor(this, R.color.transparent)
+
+            supportActionBar?.hide()*/
+
+            val mDecorView = window.decorView
+
+            mDecorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or // hide nav bar
+//                    View.SYSTEM_UI_FLAG_FULLSCREEN or // hide status bar
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        }
         init()
         loadDatas()
     }
@@ -40,13 +54,13 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onResume()
     }
 
-  /*  protected fun setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StatusBarUtil.setColor(this, resources.getColor(R.color.colorAccent, theme), 0)
-        } else {
-            StatusBarUtil.setColor(this, resources.getColor(R.color.colorAccent), 0)
-        }
-    }*/
+    /*  protected fun setStatusBar() {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+              StatusBarUtil.setColor(this, resources.getColor(R.color.colorAccent, theme), 0)
+          } else {
+              StatusBarUtil.setColor(this, resources.getColor(R.color.colorAccent), 0)
+          }
+      }*/
 
     protected fun loadDatas() {
 
