@@ -1,5 +1,6 @@
 package com.rxdemo.jeff.rxdemo.view
 
+import android.content.Intent
 import android.view.View
 import com.rxdemo.jeff.rxdemo.R
 import com.rxdemo.jeff.rxdemo.base.BaseActivity
@@ -42,6 +43,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         //        login();
         //        presenter.uploadPhoto();
         //        presenter.uploadStr();
-        presenter!!.uploadStrings()
+//        presenter!!.uploadStrings()
+        val intent = Intent(MainActivity@ this, AnkoActivity::class.java)
+        startActivity(intent)
     }
+
+
 }
